@@ -28,20 +28,15 @@ function Provider({ children }: Props) {
   const [books, setBooks] = useState<Array<{ id: number; title: string }>>([]);
 
   const fetchBooks = async () => {
-    const response = await axios.get(
-      'https://cn4xnc-3001.preview.csb.app/books'
-    );
+    const response = await axios.get('http://localhost:3001/books');
 
     setBooks(response.data);
   };
 
   const editBookById = async (id: number, newTitle: string) => {
-    const response = await axios.put(
-      `https://cn4xnc-3001.preview.csb.app/books/${id}`,
-      {
-        title: newTitle,
-      }
-    );
+    const response = await axios.put(`http://localhost:3001/books/${id}`, {
+      title: newTitle,
+    });
 
     const updatedBooks = books.map((book: { id: number; title: string }) => {
       if (book.id === id) {
@@ -55,19 +50,16 @@ function Provider({ children }: Props) {
   };
 
   const createBook = async (title: string): Promise<void> => {
-    const response = await axios.post(
-      'https://cn4xnc-3001.preview.csb.app/books',
-      {
-        title,
-      }
-    );
+    const response = await axios.post('http://localhost:3001/books', {
+      title,
+    });
 
     const updatedBooks = [...books, response.data];
     setBooks(updatedBooks);
   };
 
   const deleteBookById = async (id: number) => {
-    await axios.delete(`https://cn4xnc-3001.preview.csb.app/books/${id}`);
+    await axios.delete(`http://localhost:3001/books/${id}`);
 
     const updatedBooks = books.filter((book) => {
       return book.id !== id;
