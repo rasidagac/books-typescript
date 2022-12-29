@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
 import axios from 'axios';
 
 interface Props {
@@ -10,7 +10,7 @@ interface BooksContextValue {
     id: number;
     title: string;
   }>;
-  fetchBooks(): void;
+  stableFetchBooks(): void;
   editBookById(id: number, title: string): void;
   createBook(title: string): void;
   deleteBookById(id: number): void;
@@ -18,7 +18,7 @@ interface BooksContextValue {
 
 const BooksContext = createContext<BooksContextValue>({
   books: [],
-  fetchBooks() {},
+  stableFetchBooks() {},
   editBookById() {},
   createBook() {},
   deleteBookById() {},
@@ -32,6 +32,8 @@ function Provider({ children }: Props) {
 
     setBooks(response.data);
   };
+
+  const stableFetchBooks = useCallback(fetchBooks, []);
 
   const editBookById = async (id: number, newTitle: string) => {
     const response = await axios.put(`http://localhost:3001/books/${id}`, {
@@ -73,7 +75,7 @@ function Provider({ children }: Props) {
     deleteBookById,
     editBookById,
     createBook,
-    fetchBooks,
+    stableFetchBooks,
   };
 
   return (
